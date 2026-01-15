@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ionic Product & Precipitation</title>
+
+<style>
+* { font-family: Arial, sans-serif; }
+
+body { margin: 20px; }
+
+/* ===== TITLE + TOGGLES ===== */
+.title-row { display:flex; align-items:center; gap:20px; margin-bottom:20px; }
+h1 { font-size:32px; font-weight: normal; margin:0; }
+.toggle-row { display:flex; align-items:center; gap:15px; }
+
+/* ===== MAIN LAYOUT ===== */
+.main-container { display:flex; gap:20px; align-items:flex-start; }
+
+/* SECTION 1 */
+.section-1{
+  border:1px solid #ccc;
+  padding:15px;
+  width:483px;
+  display:flex;
+  flex-direction:column;
+  box-sizing:border-box;
+}
+
+/* RIGHT COLUMN */
+.right-column { display:flex; flex-direction:column; }
+
+/* Section 2 & 3 row */
+.section23-row { display:flex; gap:15px; align-items:flex-start; }
+
+/* SECTIONS */
+.section{ border:1px solid #ccc; padding:15px; box-sizing:border-box; }
+.section-2,.section-3{ width:252px; }
+
+/* ===== SAME HEIGHT FOR ALL SECTIONS ===== */
+:root{
+  --sectionH: 346px;
+  --graphW: 260px;
+  --sliderW: 130px;
+}
+.section-1, #section2, #section3 { height: var(--sectionH); }
+
+/* ===== TEXT ===== */
+.row { display:flex; align-items:center; margin:10px 0; }
+.label{
+  width:150px;
+  white-space: nowrap;
+  overflow:hidden;
+  text-align:right;        /* RIGHT ALIGN LABEL TEXT */
+  padding-right:10px;      /* gap before slider/graph */
+  box-sizing:border-box;
+}
+.textXY { margin:0; line-height:1.2; }
+
+/* Slider */
+.slider-container{ display:flex; align-items:center; gap:10px; }
+#sliderA{ width: var(--sliderW); }
+
+/* ===== HORIZONTAL GRAPHS ===== */
+.graph-row{ display:flex; align-items:center; gap:10px; margin:12px 0; }
+.graph-horizontal-wrapper{
+  position:relative;
+  width: var(--graphW);
+  height:24px;
+  overflow:hidden;
+}
+
+/* Graph A */
+.graphA-base,.graphA-striped{
+  position:absolute; left:0; top:2px; height:20px;
+}
+.graphA-base{ background:#f5b000; }
+.graphA-striped{
+  background:repeating-linear-gradient(
+    45deg,#f5b000,#f5b000 6px,black 6px,black 8px
+  );
+}
+
+/* Graph B */
+.bar-horizontal{
+  position:absolute; left:0; top:2px; height:20px;
+  background:#d35400;
+}
+
+/* Dotted line */
+.lineB{
+  position:absolute;
+  top:-10px; bottom:-10px;
+  border-left:4px dotted black;
+  display:none;
+}
+
+/* ===== Text P / Q ===== */
+.textE{ text-align:center; margin-top:6px; }
+.textP, .textQ{
+  font-size:16px;
+  font-weight:bold;
+}
+.textQ{ margin-top:4px; }
+
+/* ===== SECTION 2 ===== */
+.section-2-inner{ display:flex; flex-direction:column; height:100%; }
+
+.textKL{ line-height:1.2; margin-bottom:10px; }
+.textKline{ font-size:16px; }
+.textLline{ font-size:16px; font-weight:bold; }
+
+.graph-vertical-area{
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:20px;
+  flex:1;
+}
+
+.vcol{ width:78px; text-align:center; }
+
+.bar-vertical{
+  width:30px;
+  margin:0 auto;
+  transform: translateX(4px);
+  box-sizing:border-box;
+}
+
+.graph-label{
+  font-size:12px;
+  white-space: nowrap;
+}
+
+/* ===== SECTION 3 ===== */
+.container{
+  position:relative;
+  width:180px;
+  height:100%;
+  margin:0 auto;
+}
+
+.beaker-graphics{
+  position:absolute;
+  inset:0;
+  transform: scaleY(0.6);
+  transform-origin: bottom center;
+}
+
+.wall-left,.wall-right{
+  position:absolute; top:0; bottom:0; width:4px; background:black;
+}
+.wall-left{ left:0; } .wall-right{ right:0; }
+.wall-bottom{ position:absolute; left:0; right:0; bottom:0; height:4px; background:black; }
+.liquid-line{ position:absolute; left:0; right:0; top:35%; height:4px; background:black; }
+
+.precipitate{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  border:4px solid black;
+  border-radius:50%;
+  display:none;
+}
+.textJ{
+  position:absolute;
+  left:0; right:0;
+  text-align:center;
+  white-space: nowrap;
+  display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="title-row">
+  <h1>Ionic Product & Precipitation</h1>
+  <div class="toggle-row">
+    <label><input type="checkbox" id="toggleSection2"> Show bar graph</label>
+    <label><input type="checkbox" id="toggleSection3"> Show precipitation</label>
+  </div>
+</div>
+
+<div class="main-container">
+
+  <!-- SECTION 1 -->
+  <div class="section-1">
+
+    <div class="row textXY">
+      What happens when Na₂SO₄(s) is gradually added to a
+    </div>
+    <div class="row textXY">
+      solution of Ca²⁺(aq)?
+    </div>
+
+    <div class="row slider-container">
+      <div class="label">n Na₂SO₄(s) added</div>
+      <input type="range" min="0" max="10" step="0.5" value="0" id="sliderA">
+    </div>
+
+    <div class="graph-row">
+      <div class="label">ionic product</div>
+      <div class="graph-horizontal-wrapper" id="graphWrapA">
+        <div class="lineB" id="lineA"></div>
+        <div class="graphA-base" id="graphA_base"></div>
+        <div class="graphA-striped" id="graphA_striped"></div>
+      </div>
+    </div>
+
+    <div class="graph-row">
+      <div class="label">Kₛₚ</div>
+      <div class="graph-horizontal-wrapper" id="graphWrapB">
+        <div class="lineB" id="lineB"></div>
+        <div id="graphB" class="bar-horizontal"></div>
+      </div>
+    </div>
+
+    <div class="textE">
+      <div class="textP" id="textP"></div>
+      <div class="textQ" id="textQ"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="right-column">
+    <div class="section23-row">
+
+      <!-- SECTION 2 -->
+      <div class="section section-2" id="section2" style="display:none;">
+        <div class="section-2-inner">
+
+          <div class="textKL">
+            <div class="textKline" id="textK">At equilibrium...</div>
+            <div class="textLline" id="textL"></div>
+          </div>
+
+          <div class="graph-vertical-area">
+            <div class="vcol">
+              <div class="bar-vertical" id="barC" style="height:0;background:black"></div>
+              <div class="graph-label">[Ca²⁺(aq)]</div>
+            </div>
+            <div class="vcol">
+              <div class="bar-vertical" id="barD" style="height:0;background:#aaa;border:2px solid black"></div>
+              <div class="graph-label">[SO₄²⁻(aq)]</div>
+            </div>
+            <div class="vcol">
+              <div class="bar-vertical" id="barE" style="height:0;background:white;border:2px solid black"></div>
+              <div class="graph-label">n CaSO₄(s)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div class="section section-3" id="section3" style="display:none;">
+        <div class="container">
+          <div class="beaker-graphics">
+            <div class="wall-left"></div>
+            <div class="wall-right"></div>
+            <div class="wall-bottom"></div>
+            <div class="liquid-line"></div>
+          </div>
+          <div class="textJ" id="textJ">CaSO₄ ppt</div>
+          <div class="precipitate" id="precipitate"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const graphCData=[10,10,10,10,10,10,9.4,8.7,8.1,7.6,7.1,6.6,6.1,5.7,5.4,5.0,4.7,4.4,4.1,3.9,3.7];
+const graphDData=[0,1,2,3,4,5,5.4,5.7,6.1,6.6,7.1,7.6,8.1,8.7,9.4,10,10.7,11.4,12.1,12.9,13.7];
+const graphEData=[0,0,0,0,0,0,0.7,1.3,1.9,2.4,2.9,3.4,3.9,4.3,4.7,5.0,5.3,5.6,5.9,6.1,6.3];
+
+const sliderA=document.getElementById("sliderA");
+const baseA=document.getElementById("graphA_base");
+const stripedA=document.getElementById("graphA_striped");
+const graphB=document.getElementById("graphB");
+const lineA=document.getElementById("lineA");
+const lineB=document.getElementById("lineB");
+const wrapA=document.getElementById("graphWrapA");
+const wrapB=document.getElementById("graphWrapB");
+
+const barC=document.getElementById("barC");
+const barD=document.getElementById("barD");
+const barE=document.getElementById("barE");
+
+const precipitate=document.getElementById("precipitate");
+const textJ=document.getElementById("textJ");
+
+const toggleSection2=document.getElementById("toggleSection2");
+const toggleSection3=document.getElementById("toggleSection3");
+const section2=document.getElementById("section2");
+const section3=document.getElementById("section3");
+
+const textP=document.getElementById("textP");
+const textQ=document.getElementById("textQ");
+const textK=document.getElementById("textK");
+const textL=document.getElementById("textL");
+
+const MAX_BAR_PX=200, MAX_VAL=13.7;
+
+function setText(el,msg,color){el.textContent=msg;el.style.color=color;}
+
+function update(v){
+  const graphAVal=v*2, idx=Math.max(0,Math.min(20,Math.round(graphAVal)));
+  textK.textContent="At equilibrium...";
+
+  if(v<=2.5){
+    setText(textP,"IP ≤ Kₛₚ; no ppt formed","black");
+    textQ.textContent="";
+  }else{
+    setText(textP,"IP > Kₛₚ; ppt will form","red");
+    setText(textQ,"precipitation occurs until IP = Kₛₚ","red");
+  }
+
+  if(v<=2.0){
+    setText(textL,"[Ca²⁺][SO₄²⁻] < Kₛₚ","black");
+  }else if(v===2.5){
+    setText(textL,"[Ca²⁺][SO₄²⁻] = Kₛₚ","black");
+  }else{
+    setText(textL,"[Ca²⁺][SO₄²⁻] = Kₛₚ","red");
+  }
+
+  const split=5;
+  const totalPx=(graphAVal/20)*wrapA.clientWidth;
+  const splitPx=(split/20)*wrapA.clientWidth;
+
+  baseA.style.width=Math.min(totalPx,splitPx)+"px";
+  stripedA.style.left=Math.min(totalPx,splitPx)+"px";
+  stripedA.style.width=Math.max(totalPx-splitPx,0)+"px";
+
+  const show=graphAVal>=split;
+  lineA.style.left=splitPx+"px";
+  lineA.style.display=show?"block":"none";
+
+  graphB.style.width=splitPx+"px";
+  lineB.style.left=splitPx+"px";
+  lineB.style.display=show?"block":"none";
+
+  barC.style.height=(graphCData[idx]/MAX_VAL)*MAX_BAR_PX+"px";
+  barD.style.height=(graphDData[idx]/MAX_VAL)*MAX_BAR_PX+"px";
+  barE.style.height=(graphEData[idx]/MAX_VAL)*MAX_BAR_PX+"px";
+
+  if(graphEData[idx]>0){
+    const size=graphEData[idx]*6;
+    precipitate.style.width=size+"px";
+    precipitate.style.height=size+"px";
+    precipitate.style.display="block";
+    textJ.style.bottom=(20+size+10)+"px";
+    textJ.style.display="block";
+  }else{
+    precipitate.style.display="none";
+    textJ.style.display="none";
+  }
+}
+
+update(0);
+sliderA.addEventListener("input",e=>update(+e.target.value));
+toggleSection2.addEventListener("change",e=>section2.style.display=e.target.checked?"block":"none");
+toggleSection3.addEventListener("change",e=>section3.style.display=e.target.checked?"block":"none");
+window.addEventListener("resize",()=>update(+sliderA.value));
+</script>
+
+</body>
+</html>
